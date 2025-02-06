@@ -1,0 +1,87 @@
+-- locPlr
+local locPlr = game.Players.LocalPlayer local plrGui = locPlr.PlayerGui
+
+
+
+-- Guis
+local gui = Instance.new("ScreenGui", plrGui)
+local frame = Instance.new("Frame", gui)
+local AutoKill = Instance.new("TextButton", frame)
+local KeyTeleport = Instance.new("TextButton", frame)
+
+-- UI
+local Drag = Instance.new("UIDragDetector", frame)
+local FrameCorner = Instance.new("UICorner", frame) local AKButtonCorner = Instance.new("UICorner", AutoKill) local KTpCorner = Instance.new("UICorner", KeyTeleport)
+
+-- Names
+gui.Name = "MainGuiInsert"
+AutoKill.Name = "AutoKill"
+KeyTeleport.Name = "KeyTeleport"
+
+-- Positions
+frame.Position =  UDim2.new(0, 0, 0, 0)
+AutoKill.Position =  UDim2.new(0.5, 0, 0, 0)
+KeyTeleport.Position =  UDim2.new(0, 0, 0, 0)
+
+-- Sizes
+frame.Size =  UDim2.new(0.1, 0, 0.2, 0)
+AutoKill.Size =  UDim2.new(0.5, 0, 0.5, 0)
+KeyTeleport.Size =  UDim2.new(0.5, 0, 0.5, 0)
+
+-- Transparency
+AutoKill.BackgroundTransparency = 0.2
+KeyTeleport.BackgroundTransparency = 0.2
+frame.BackgroundTransparency = 0.2
+
+-- Colors
+AutoKill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+KeyTeleport.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+AutoKill.TextColor3 = Color3.fromRGB(0, 0, 0)
+KeyTeleport.TextColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Text
+AutoKill.Text = "Auto Kill"
+KeyTeleport.Text = "Key Teleport"
+
+local function setVars()
+	char = locPlr.Character or locPlr.CharacterAdded:Wait()
+	hum = char:WaitForChild("Humanoid")
+	hrp = char:WaitForChild("HumanoidRootPart")
+end
+setVars()
+
+locPlr.CharacterAdded:Connect(setVars)
+
+
+
+-- Funtions
+AutoKill.MouseButton1Click:Connect(function()
+	local function teleport(target)
+		local targetPlr = target
+		if targetPlr and targetPlr.Character and targetPlr.Character:FindFirstChild("HumanoidRootPart") then
+			local targetHrp = targetPlr.Character.HumanoidRootPart
+			local direction = targetHrp.CFrame.LookVector * -2 -- Moves behind
+			hrp.CFrame = targetHrp.CFrame -- + direction
+
+			-- Make the camera look at the teleported target
+			-- cam.CFrame = CFrame.lookAt(cam.CFrame.Position, targetHrp.Position)
+		end
+	end
+	
+	local delayed = 3
+	
+	for i, plreeeeee in pairs(game.Players:GetChildren()) do
+		if plreeeeee == locPlr then continue end
+		teleport(plreeeeee)
+		task.wait(delayed)
+	end
+	
+end)
+
+local items = game.Workspace.ItemFolder
+KeyTeleport.MouseButton1Click:Connect(function()
+	local key = items.WhiteKey
+	local cf = key.CFrame
+	hrp.CFrame = cf.CFrame
+end)
